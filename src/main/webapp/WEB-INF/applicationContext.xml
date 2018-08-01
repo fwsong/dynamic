@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+
+    <bean id="dataSourceDynamic" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+       	<property name="driverClass" value="com.mysql.jdbc.Driver" />
+        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/dynamic?useUnicode=true&amp;characterEncoding=UTF8" />
+        <property name="user" value="root" />
+        <property name="password" value="fwsong" />
+
+        <!-- Connection Pooling Info -->
+        <property name="initialPoolSize" value="10" />
+        <property name="maxIdleTime" value="30" />
+        <property name="maxPoolSize" value="100" />
+        <property name="minPoolSize" value="10"/>
+        <property name="checkoutTimeout" value="3000"/>
+        <property name="acquireIncrement" value="2"/>
+        <property name="acquireRetryAttempts" value="0"/>
+        <property name="automaticTestTable" value="Test"/>
+        <property name="idleConnectionTestPeriod" value="60" />
+    </bean>
+
+    <bean id="sessionFactoryDynamic"
+          class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource">
+            <ref bean="dataSourceDynamic"/>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">
+                    org.hibernate.dialect.MySQLDialect
+                </prop>
+                <prop key="hibernate.show_sql">false</prop>
+                <prop key="hibernate.hbm2ddl.auto">none</prop>
+                <prop key="hibernate.cache.provider_class">
+                    org.hibernate.cache.OSCacheProvider
+                </prop>
+                <prop key="hibernate.cache.use_query_cache">false</prop>
+                <prop key="hibernate.jdbc.batch_size">30</prop>
+                <prop key="hibernate.cache.use_second_level_cache">
+                    false
+                </prop>
+                <prop key="hibernate.order_inserts">true</prop>
+                <prop key="hibernate.order_updates">true</prop>
+            </props>
+        </property>
+        <property name="mappingDirectoryLocations">
+            <list>
+                <value>
+                    classpath:/com/dynamic/web/pojo/
+                </value>
+            </list>
+        </property>
+        <property name="packagesToScan">
+            <list>
+                <value>com.dynamic.web.pojo</value>
+            </list>
+        </property>
+
+    </bean>
+
+</beans>
